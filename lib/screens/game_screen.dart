@@ -2,11 +2,14 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import '../components/dailog_component.dart';
 import '../components/target_component.dart';
 import '../data/data.dart';
 import '../utils/game_timer_utils.dart';
 import '../utils/text_utils.dart';
 class GameWidget extends StatefulWidget {
+  final VoidCallback ? onflip;
+  GameWidget({this.onflip});
   @override
   _GameWidgetState createState() => _GameWidgetState();
 }
@@ -18,6 +21,7 @@ class _GameWidgetState extends State<GameWidget> {
   late List<Alignment> _targets;
   late TargetData _targetData;
   int _score = 0;
+  int _traget=5;
   int _remaininglives=3;
   bool _gameInProgress = false;
   GameTimer _gameTimer = GameTimer();
@@ -54,6 +58,7 @@ class _GameWidgetState extends State<GameWidget> {
     _randomize();
     setState(() {
       _score = 0;
+      _remaininglives=3;
       _gameInProgress = true;
     });
     _gameTimer.startGame();
@@ -125,15 +130,34 @@ class _GameWidgetState extends State<GameWidget> {
             )
           ],
         ),
-        title:  const Padding(
-          padding:  EdgeInsets.only(top: 10),
-          child: TextPrompt("Level 1",color: Colors.white,fontSize: 20,),
+        title:   Padding(
+          padding: const  EdgeInsets.only(top: 10),
+          child: Column(
+            children: [
+             GestureDetector(
+               onTap: (){
+                 showDialog(context: context,
+                     builder: (BuildContext context){
+                       return CustomDialogBox(
+                         title: "Custom Dialog Demo",
+                         descriptions: "Hii all this is a custom dialog in flutter and  you will be use in your flutter applications",
+                         text: "Yes",
+
+                       );
+                     }
+                 );
+               },
+                 child: const  TextPrompt("TAP",color: Colors.white,fontSize: 20,)),
+              TextPrompt("${_targetData.text}",color: Colors.white,fontSize: 20,),
+
+            ],
+          ),
         ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 20,top: 10),
             child: TextPrompt(
-              'Score: $_score',
+              'Target: $_traget',
               color: Colors.white,
               fontSize: 18,
             ),
@@ -141,61 +165,82 @@ class _GameWidgetState extends State<GameWidget> {
 
         ],
       ),
-      body: Stack(
+      body: Column(
         children: [
-          // Handle taps anywhere
-          Positioned.fill(
-            child: GestureDetector(
-              onTapDown: (details) => _handleTapDown(details, null),
-            ),
-          ),
-
-
-          // Targets
-          for (var i = 0; i < targetColors.length; i++)
-            GestureDetector(
-              // Handle taps on targets
-              onTapDown: (details) => _handleTapDown(details, i),
-              // TO DO: Convert to AnimatedAlign & add a duration argument
-              child: AnimatedAlign(
-                duration:const  Duration(milliseconds: 300),
-                alignment: _targets[i],
-                child: Target(
-                  color: targetColors[i],
-                  textColor: textColors[i],
-                  text: i.toString(),
+          Expanded(
+            child: Stack(
+              children: [
+                // Handle taps anywhere
+                Positioned.fill(
+                  child: GestureDetector(
+                    onTapDown: (details) => _handleTapDown(details, null),
+                  ),
                 ),
-              ),
-            ),
-          // Next Command
-          Align(
-            alignment: const Alignment(0, 0),
-            child: IgnorePointer(
-              ignoring: _gameInProgress,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
 
-                  TextPrompt(
-                    _gameInProgress ? 'Tap ${_targetData.text}' : 'Game Over!',
-                    color: _gameInProgress ? _targetData.color : Colors.white,
-                  ),
 
-                  _gameInProgress? const SizedBox():   OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      shape: const StadiumBorder(),
-                      side: const BorderSide(width: 2, color: Colors.white),
-                    ),
-                    onPressed: _startGame,
-                    child:const Padding(
-                      padding:  EdgeInsets.all(8.0),
-                      child: TextPrompt('Start', color: Colors.white),
+                // Targets
+                for (var i = 0; i < targetColors.length; i++)
+                  GestureDetector(
+                    // Handle taps on targets
+                    onTapDown: (details) => _handleTapDown(details, i),
+                    // TO DO: Convert to AnimatedAlign & add a duration argument
+                    child: AnimatedAlign(
+                      duration:const  Duration(milliseconds: 300),
+                      alignment: _targets[i],
+                      child: Target(
+                        color: targetColors[i],
+                        textColor: textColors[i],
+                        text: i.toString(),
+                      ),
                     ),
                   ),
-                ],
-              ),
+                // Next Command
+                Align(
+                  alignment: const Alignment(0, 0),
+                  child: IgnorePointer(
+                    ignoring: _gameInProgress,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+
+                        TextPrompt(
+                          _gameInProgress ? "" : 'Game Over!',
+                          color:  Colors.white,
+                        ),
+
+                        _gameInProgress? const SizedBox():   OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            shape: const StadiumBorder(),
+                            side: const BorderSide(width: 2, color: Colors.white),
+                          ),
+                          onPressed: _startGame,
+                          child:const Padding(
+                            padding:  EdgeInsets.all(8.0),
+                            child: TextPrompt('Start', color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+               const  TextPrompt("Level 1",color: Colors.white,fontSize: 20,),
+                TextPrompt(
+                  'Score: $_score',
+                  color: Colors.white,
+                  fontSize: 18,
+                ),
+
+              ],
+            ),
+          )
         ],
       ),
     );

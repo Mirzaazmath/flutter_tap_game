@@ -2,19 +2,36 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_tap_game/screens/game_screen.dart';
+import 'package:flutter_tap_game/screens/home_screen.dart';
+
+import 'components/flip_component.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  final pageFlipKey = GlobalKey<PageFlipBuilderState>();
   @override
   Widget build(BuildContext context) {
     final darkBlue =  Color.fromARGB(255, 18, 32, 47);
     return MaterialApp(
       theme: ThemeData.dark().copyWith(scaffoldBackgroundColor: darkBlue),
       debugShowCheckedModeBanner: false,
-      home: GameWidget(),
+      home:PageFlipBuilder(
+
+        key:pageFlipKey,
+
+        frontBuilder: (BuildContext context) =>HomeScreen(
+
+          onflip: () => pageFlipKey.currentState?.flip(),
+        ),
+        backBuilder: (BuildContext context) =>GameWidget(
+          onflip: () => pageFlipKey.currentState?.flip(),
+        ),
+      )
+      //HomeScreen(),
+      //GameWidget(),
     );
   }
 }

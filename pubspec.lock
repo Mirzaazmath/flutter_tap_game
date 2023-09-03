@@ -107,6 +107,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
+  neopop:
+    dependency: "direct dev"
+    description:
+      name: neopop
+      sha256: f009b36e803cba5df533a92b567bbd184698fb6b14aca6bcdfb7241da9afb370
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   path:
     dependency: transitive
     description:
@@ -186,3 +194,4 @@ packages:
     version: "0.1.4-beta"
 sdks:
   dart: ">=3.1.0 <4.0.0"
+  flutter: ">=1.0.0"

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 const targetColors = [Colors.orange, Colors.green, Colors.yellow, Colors.blue];
 const textColors = [Colors.blue, Colors.yellow, Colors.green, Colors.orange];
-const colorNames = ['orange', 'green', 'yellow', 'blue'];
+// const colorNames = ['orange', 'green', 'yellow', 'blue'];
 
 
 enum TargetType { color, number }
@@ -16,8 +16,11 @@ class TargetData {
   final TargetType type;
   final int index;
 
-  String get text => type == TargetType.color
-      ? 'COLOR ${colorNames[index]}'
-      : 'NUMBER $index';
+  String get text =>
+      // type ==
+      // TargetType.color
+      // ? 'COLOR ${colorNames[index]}'
+      // :
+  '$index';
   Color get color => textColors[index];
 }
