@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../components/dailog_component.dart';
 import '../components/target_component.dart';
 import '../data/data.dart';
@@ -20,35 +20,89 @@ class _GameWidgetState extends State<GameWidget> {
   final bgplayer = AudioPlayer();
   final sucessplayer = AudioPlayer();
   final failplayer = AudioPlayer();
+  // FOR RANDOM NUMBER
   static final _rng = Random();
+  //  INITIAL  HIGH SCORE
+  int _highscore=0;
+  //  INITIAL LEVEL
+  int _level=1;
 
 
   late Alignment _playerAlignment;
   late List<Alignment> _targets;
   late TargetData _targetData;
+  // INITIAL SCORE
   int _score = 0;
+  // INITIAL  TARGET
   int _traget=5;
+  // REMANING LIVES
   int _remaininglives=3;
+  // BOOL TO CHECK THIS IS IN PROGRESS OR NOT
   bool _gameInProgress = false;
+  // GAME TIMER INITAIL FROM TIMER CLASS
   GameTimer _gameTimer = GameTimer();
 
   @override
   void initState() {
     super.initState();
-   // _playmusic();
+    // METHOD TO GET THE HIGHSCORE OF THE USER
+    _gethighscore();
+
     _playerAlignment = const  Alignment(0, 0);
+    // GAME TIMER LISTENER
     _gameTimer.remainingSeconds.addListener(() async {
+      // IF THE TIME REACH TO 0
       if (_gameTimer.remainingSeconds.value == 0){
+        // BACKGROUND MUSIC STOPS
         await bgplayer.stop();
+        // GAME IN PROGRESS STOPS
         _gameInProgress = false;
+        // ALERT DAILOG TO DISPLAY RESULT
         _showResult();
         setState(() {
 
         });
       }
     });
+    // RANDOMIZATION
     _randomize();
+    // MUSIC PLAYER LISTENER
+    bgplayer.onPlayerComplete.listen((_) async{
+      // AFTER COMPLETE WE ARE AGAIN STARTING THE MUSIC
+
+        await bgplayer.play(AssetSource('music/bg.mp3'));
+      setState(() {
+
+      });
+    });
   }
+
+  // METHOD TO GET HIGH SCORE FROM SharedPreferences
+  // AND LEVEL
+  _gethighscore()async{
+    // Obtain shared preferences.
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // Try reading data from the 'counter' key. If it doesn't exist, returns null.
+    final int? score = prefs.getInt('highscore');
+    final int? level = prefs.getInt('level');
+
+    print(score);
+    setState(() {
+      _traget=5;
+
+      _highscore=score??0;
+      // INCREMENT OF LEVEL
+      _level=level??1;
+      // INCREMENT OF TARGET
+      _traget=_traget+_level;
+    });
+
+
+  }
+
+
+
+// DISPOSE METHOD TO DISPOSE THE MUSIC  PLAYERS
   @override
   void dispose() {
     bgplayer.dispose();
@@ -58,15 +112,7 @@ class _GameWidgetState extends State<GameWidget> {
 
     super.dispose();
   }
-  // setting the path for the music
-// void _playmusic()async{
-//
-//   // await bgplayer.setSource(AssetSource('music/bg.mp3'));
-//   // await sucessplayer.setSource(AssetSource('music/success.mp3'));
-//   // await failplayer.setSource(AssetSource('music/error.mp3'));
-//
-//
-// }
+// RANDOM NUMBER GENERATOR METHOD
   void _randomize() {
     _targetData = TargetData(
       type: TargetType.values[_rng.nextInt(2)],
@@ -131,6 +177,7 @@ class _GameWidgetState extends State<GameWidget> {
       }
     });
   }
+  // REMAINING LIVES OVER
   _isliveOver(){
     setState(() {
       _gameInProgress = false;
@@ -141,8 +188,14 @@ class _GameWidgetState extends State<GameWidget> {
 
     });
   }
+  // SHOW RESULT
   _showResult()async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     _score<_traget?await failplayer.play(AssetSource('music/error.mp3')):sucessplayer.play(AssetSource('music/success.mp3'));
+    _highscore<_score? await prefs.setInt('highscore', _score):await prefs.setInt('highscore', _highscore);
+
+    _score<_traget? await prefs.setInt('level', _level):await prefs.setInt('level', _level+1);
+
 
       showDialog(context: context,
           barrierDismissible: false,
@@ -156,10 +209,12 @@ class _GameWidgetState extends State<GameWidget> {
             );
           }
       );
+    _gethighscore();
   }
 
   @override
   Widget build(BuildContext context) {
+    // WillPopScope TO HANDLE BACK
     return WillPopScope(
       onWillPop: () async {
         final shouldPop = await showDialog<bool>(
@@ -294,7 +349,7 @@ class _GameWidgetState extends State<GameWidget> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                 const  TextPrompt("Level 1",color: Colors.white,fontSize: 20,),
+                   TextPrompt("Level $_level",color: Colors.white,fontSize: 20,),
                   TextPrompt(
                     'Score: $_score',
                     color: Colors.white,

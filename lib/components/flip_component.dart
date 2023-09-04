@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-
+// CUSTOM FLIP CLASS FOR FLIP NAVIGATION
 class PageFlipBuilder extends StatefulWidget {
   const PageFlipBuilder({
     Key? key,

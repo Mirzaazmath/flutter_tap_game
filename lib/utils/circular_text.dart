@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-
+// CIRCULAR TEXT CUSTOM CLASS
 class ArcText extends StatelessWidget {
   const ArcText({
 

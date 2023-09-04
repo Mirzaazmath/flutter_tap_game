@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// CUSTOM CLASS FOR TEXT DESIGN
 class TextPrompt extends StatelessWidget {
   const TextPrompt(
       this.text, {

@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 
-
+// CUSTOM DAILOG CLASS
 class CustomDialogBox extends StatefulWidget {
   final String title, descriptions, text;
   final bool didwin;
