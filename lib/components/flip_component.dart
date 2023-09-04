@@ -26,7 +26,7 @@ class PageFlipBuilderState extends State<PageFlipBuilder> with SingleTickerProvi
     // 4. Create the AnimationController
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 1000),
     );
     // 5. Add a status listener
     _controller.addStatusListener(_updateStatus);

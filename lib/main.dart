@@ -1,13 +1,18 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_tap_game/screens/game_screen.dart';
 import 'package:flutter_tap_game/screens/home_screen.dart';
 
 import 'components/flip_component.dart';
 
 void main() {
-  runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -27,7 +32,10 @@ class MyApp extends StatelessWidget {
           onflip: () => pageFlipKey.currentState?.flip(),
         ),
         backBuilder: (BuildContext context) =>GameWidget(
-          onflip: () => pageFlipKey.currentState?.flip(),
+          onflip: () {
+            Navigator.pop(context,false);
+            pageFlipKey.currentState?.flip();
+          }
         ),
       )
       //HomeScreen(),

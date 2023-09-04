@@ -35,7 +35,7 @@ class _GameWidgetState extends State<GameWidget> {
   @override
   void initState() {
     super.initState();
-    _playmusic();
+   // _playmusic();
     _playerAlignment = const  Alignment(0, 0);
     _gameTimer.remainingSeconds.addListener(() async {
       if (_gameTimer.remainingSeconds.value == 0){
@@ -59,13 +59,14 @@ class _GameWidgetState extends State<GameWidget> {
     super.dispose();
   }
   // setting the path for the music
-void _playmusic()async{
-  await bgplayer.setSource(AssetSource('music/bg.mp3'));
-  await sucessplayer.setSource(AssetSource('music/success.mp3'));
-  await failplayer.setSource(AssetSource('music/error.mp3'));
-
-
-}
+// void _playmusic()async{
+//
+//   // await bgplayer.setSource(AssetSource('music/bg.mp3'));
+//   // await sucessplayer.setSource(AssetSource('music/success.mp3'));
+//   // await failplayer.setSource(AssetSource('music/error.mp3'));
+//
+//
+// }
   void _randomize() {
     _targetData = TargetData(
       type: TargetType.values[_rng.nextInt(2)],
@@ -81,7 +82,7 @@ void _playmusic()async{
   }
 // START GAME
   void _startGame() async {
-    await bgplayer.resume();
+    await bgplayer.play(AssetSource('music/bg.mp3'));
     _randomize();
     setState(() {
       _score = 0;
@@ -141,7 +142,7 @@ void _playmusic()async{
     });
   }
   _showResult()async{
-    _score<_traget?await failplayer.resume():sucessplayer.resume();
+    _score<_traget?await failplayer.play(AssetSource('music/error.mp3')):sucessplayer.play(AssetSource('music/success.mp3'));
 
       showDialog(context: context,
           barrierDismissible: false,
@@ -165,7 +166,7 @@ void _playmusic()async{
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: const Text('Do you want to go back?'),
+              title: const Text('Do you want to Quit Game?'),
               actionsAlignment: MainAxisAlignment.spaceBetween,
               actions: [
                 TextButton(

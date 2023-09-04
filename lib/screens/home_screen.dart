@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:neopop/neopop.dart';
 import '../utils/circular_text.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/text_utils.dart';
 class HomeScreen extends StatefulWidget {
   final VoidCallback ? onflip;
@@ -14,6 +15,24 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _highscore=0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _gethighscore();
+  }
+  _gethighscore()async{
+    // Obtain shared preferences.
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // Try reading data from the 'counter' key. If it doesn't exist, returns null.
+    final int? score = prefs.getInt('highscore');
+    print(score);
+    setState(() {
+      _highscore=score??0;
+    });
+
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
