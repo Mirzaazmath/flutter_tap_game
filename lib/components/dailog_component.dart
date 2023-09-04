@@ -7,9 +7,10 @@ import 'package:flutter/material.dart';
 
 class CustomDialogBox extends StatefulWidget {
   final String title, descriptions, text;
+  final bool didwin;
 
 
-  const CustomDialogBox({  required this.title, required this.descriptions, required this.text, });
+  const CustomDialogBox({  required this.title, required this.descriptions, required this.text,required this.didwin });
 
   @override
   _CustomDialogBoxState createState() => _CustomDialogBoxState();
@@ -19,6 +20,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Constants.padding),
       ),
@@ -28,6 +30,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
     );
   }
   contentBox(context){
+
     return Stack(
       children: <Widget>[
         Container(
@@ -39,7 +42,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
               shape: BoxShape.rectangle,
               color: Colors.white,
               borderRadius: BorderRadius.circular(Constants.padding),
-              boxShadow: [
+              boxShadow:const  [
                 BoxShadow(color: Colors.black,offset: Offset(0,10),
                     blurRadius: 10
                 ),
@@ -48,37 +51,40 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text(widget.title,style:const  TextStyle(fontSize: 22,fontWeight: FontWeight.w600,color: Colors.red),),
+              Text(widget.title,style:  TextStyle(fontSize: 22,fontWeight: FontWeight.w600,color:widget.didwin? Colors.red:Colors.green,),),
             const   SizedBox(height: 15,),
-              Text(widget.descriptions,style:const  TextStyle(fontSize: 14,color: Colors.red),textAlign: TextAlign.center,),
+              Text(widget.descriptions,style:  TextStyle(fontSize: 14,color:widget.didwin? Colors.red:Colors.green,),textAlign: TextAlign.center,),
               const SizedBox(height: 22,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                      onPressed: (){
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(widget.text,style:const  TextStyle(fontSize: 18),)),
-                  ElevatedButton(
-                      onPressed: (){
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(widget.text,style:const  TextStyle(fontSize: 18),)),
-                ],
-              )
+              Align(
+                alignment: Alignment.bottomRight,
+                child:GestureDetector(
+                  onTap: (){
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    height: 40,
+                    width: 150,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.deepPurpleAccent
+                    ),
+                      alignment: Alignment.center,
+                      child: Text(widget.text,style:const  TextStyle(fontSize: 18,fontWeight: FontWeight.bold),)),
+                ),
+
+                )
             ],
           ),
         ),
-       const  Positioned(
+         Positioned(
           left: Constants.padding,
           right: Constants.padding,
           child: CircleAvatar(
             backgroundColor: Colors.transparent,
             radius: Constants.avatarRadius,
             child: CircleAvatar(
-              backgroundColor: Colors.red,
-              radius: 50,child: Icon(Icons.cancel_outlined,size: 60,color: Colors.white,),
+              backgroundColor: widget.didwin? Colors.red:Colors.green,
+              radius: 50,child: Icon( widget.didwin? Icons.cancel_outlined:Icons.check_circle_outline_outlined,size: 60,color: Colors.white,),
             ),
 
           ),

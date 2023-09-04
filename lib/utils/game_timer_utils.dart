@@ -16,5 +16,8 @@ class GameTimer {
       }
     });
   }
+  void stopGame(){
+    _timer?.cancel();
+  }
 }
 
